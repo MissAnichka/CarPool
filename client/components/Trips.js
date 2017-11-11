@@ -6,8 +6,10 @@ export default class Trips extends Component {
   constructor(props){
     super(props);
     this.state={
-      tripStart: '',
-      tripEnd: ''
+      origin: '',
+      destination: '',
+      date: '',
+      allTrips: []
     }
   }
 
@@ -24,7 +26,7 @@ export default class Trips extends Component {
         source={{ uri: remote }}
         >
           <View style={styles.container}>
-            <Text style={styles.maintext}>All Trips</Text>
+            <Text style={styles.maintext}>Trips</Text>
             <Text style={styles.subtext}>Search by City/State: </Text>
             <TextInput
               style={styles.input}
@@ -77,3 +79,11 @@ const styles = StyleSheet.create({
   },
 });
 
+// USE GOOGLE'S API / MAPBOX TO GET TRIPS TO MATCH UP
+// trip = {
+//     userid: number,
+//     origin: address,
+//     destination: address,
+//     travelDate: date,
+//     recurring: boolean
+// }

@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import {Actions } from 'react-native-router-flux';
 
 module.exports = function Footer(){
     return(
         <View style={styles.footer}>
-            <Text style={styles.footerText}>Login</Text>
-            <Text style={styles.footerText}>Signup</Text>
+            <Text style={styles.footerText} onPress={() => Actions.login()}>Login</Text>
+            <Text style={styles.footerText} onPress={() => Actions.login()}>Signup</Text>
         </View>
     )
 }
