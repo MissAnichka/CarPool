@@ -6,9 +6,6 @@ export default class Trips extends Component {
   constructor(props){
     super(props);
     this.state={
-      origin: '',
-      destination: '',
-      date: '',
       allTrips: []
     }
   }
@@ -18,8 +15,11 @@ export default class Trips extends Component {
   }
 
   render() {
-    const remote = 'https://static.pexels.com/photos/297755/pexels-photo-297755.jpeg';
+    const remote = 'https://cdn2.hercampus.com/rsz_pexels-photo-297755.jpg';
     const resizeMode = 'center';
+    const {origin} = this.props
+    const {destination} = this.props
+    const {date} = this.props
     return (
         <Image 
         style={styles.image}
@@ -27,6 +27,7 @@ export default class Trips extends Component {
         >
           <View style={styles.container}>
             <Text style={styles.maintext}>Trips</Text>
+            <Text>Leaving from {origin}, heading to {destination}, on {date}: </Text>
             <Text style={styles.subtext}>Search by City/State: </Text>
             <TextInput
               style={styles.input}

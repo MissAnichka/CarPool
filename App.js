@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Button, Alert, Linking } from 'react-native';
-import { Router, Stack, Scene } from 'react-native-router-flux';
+import { Router, Scene } from 'react-native-router-flux';
 
 import Home from './client/components/Home.js';
 import Footer from './client/components/Footer.js';
@@ -24,5 +24,4 @@ export default class App extends Component {
   }
 }
 
-// <Scene key="login" component={Login} title="Login"/>
 // <Scene key="signup" component={Signup} title="Signup"/>

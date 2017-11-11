@@ -10,13 +10,17 @@ export default class Home extends Component {
     super(props);
     this.state={
       origin: '',
-      destination: ''
+      destination: '',
+      date: ''
     }
   }
 
   render() {
     const remote = 'https://static.pexels.com/photos/465445/pexels-photo-465445.jpeg';
     const resizeMode = 'center';
+    const {origin} = this.state
+    const {destination} = this.state
+    const {date} = this.state
     return (
         <Image 
         style={styles.image}
@@ -27,18 +31,27 @@ export default class Home extends Component {
             <Text style={styles.subtext}>Where ya goin?</Text>
             <TextInput
               style={styles.input}
-              onChangeText={(tripStart) => this.setState({tripStart})}
-              value={this.state.tripStart}
+              onChangeText={(origin) => this.setState({origin})}
+              value={origin}
               placeholder='Start Point'
+              placeholderTextColor='purple'
             />
             <TextInput
               style={styles.input}
-              onChangeText={(tripEnd) => this.setState({tripEnd})}
-              value={this.state.tripEnd}
+              onChangeText={(destination) => this.setState({destination})}
+              value={destination}
               placeholder='End Point'
+              placeholderTextColor='purple'
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={(date) => this.setState({date})}
+              value={date}
+              placeholder='mm/dd/yy'
+              placeholderTextColor='purple'
             />
             <Button
-              onPress={() => Actions.trips()}
+              onPress={() => Actions.trips({origin, destination, date})}
               title='Find a ride'
               color="#841584"
               accessibilityLabel='Tap here to find a ride'
@@ -81,12 +94,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 5,
     margin: 5,
+    color: 'purple',
+    backgroundColor: 'rgba(255,255,255,0.4)',
   },
   actionText: {
     fontSize: 20,
+    marginTop: 20,
   },
   reset: {
-    margin: 5,
+    margin: 20,
   },
 });
 
