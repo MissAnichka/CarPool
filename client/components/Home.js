@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TextInput, Button, Alert, Linking, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Button, Alert, Linking } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 
 import Footer from './Footer';
@@ -26,10 +26,7 @@ export default class Home extends Component {
         style={styles.image}
         source={{ uri: remote }}
         >
-          <KeyboardAvoidingView 
-            style={styles.container}
-            behavior="padding"
-            >
+          <View style={styles.container}>
             <Text style={styles.maintext}>CarPool</Text>
             <Text style={styles.subtext}>Where ya goin?</Text>
             <TextInput
@@ -61,7 +58,7 @@ export default class Home extends Component {
               style={styles.reset}
             />
             <Text style={styles.actionText} onPress={() => Actions.trips()}>View All Trips</Text>
-          </KeyboardAvoidingView>
+          </View>
           <Footer />
         </Image>
     );

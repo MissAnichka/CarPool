@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Button, Alert, Linking } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import Footer from './Footer';
 
 export default class Trips extends Component {
@@ -28,21 +27,14 @@ export default class Trips extends Component {
         >
           <View style={styles.container}>
             <Text style={styles.maintext}>Trips</Text>
-            {
-                (origin || destination || date) ? 
-                <Text style={styles.infoText}>Leaving from {origin}, heading to {destination}, on {date}: </Text>
-                :
-                <View style={{alignItems: 'center'}}>
-                    <Text style={styles.subtext}>Filter by City/State: </Text>
-                    <TextInput
-                    style={styles.input}
-                    onChangeText={(searchCityState) => this.setState({searchCityState})}
-                    value={this.state.searchCityState}
-                    placeholder='Enter City or State'
-                    />
-                </View>
-            }
-            <Text onPress={() => Actions.map()}>Tap for map</Text>
+            <Text>Leaving from {origin}, heading to {destination}, on {date}: </Text>
+            <Text style={styles.subtext}>Search by City/State: </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(searchCityState) => this.setState({searchCityState})}
+              value={this.state.searchCityState}
+              placeholder='Enter City or State'
+            />
           </View>
           <Footer />
         </Image>
@@ -71,11 +63,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     margin: 8,
   },
-  infoText: {
-    fontSize: 20,
-    margin: 10,
-    padding: 10,
-  },
   input: {
     height: 40,
     width: 200,
@@ -93,7 +80,7 @@ const styles = StyleSheet.create({
   },
 });
 
-// USE MAPBOX TO GET TRIPS TO MATCH UP
+// USE GOOGLE'S API / MAPBOX TO GET TRIPS TO MATCH UP
 // trip = {
 //     userid: number,
 //     origin: address,

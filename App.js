@@ -5,9 +5,9 @@ import { Router, Scene } from 'react-native-router-flux';
 import Home from './client/components/Home.js';
 import Footer from './client/components/Footer.js';
 import Login from './client/components/Login.js';
-import Profile from './client/components/Profile.js';
+// import Signup from './client/components/Signup.js';
 import Trips from './client/components/Trips.js';
-import Map from './client/components/Map.js';
+// import User from './client/components/User.js';
 
 
 export default class App extends Component {
@@ -18,10 +18,10 @@ export default class App extends Component {
           <Scene key="home" component={Home}/>
           <Scene key="trips" component={Trips}/>
           <Scene key="login" component={Login}/>
-          <Scene key="profile" component={Profile}/>
-          <Scene key="map" component={Map}/>
         </Scene>
       </Router>
     );
   }
 }
+
+// <Scene key="signup" component={Signup} title="Signup"/>
