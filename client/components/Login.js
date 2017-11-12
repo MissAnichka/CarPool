@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, TextInput, Button, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 
 const USERNAME = 'USERNAME'
@@ -32,7 +32,7 @@ export default class Login extends Component {
               this.setState({name, email, rideOrDrive})
           }
       } catch(error){
-          console.error(`Couldnt get sh*t ${error}`)
+          console.error(`Couldnt get it ${error}`)
       }
   }
 
@@ -91,39 +91,51 @@ export default class Login extends Component {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.maintext}>Login / Signup</Text>
-            <TextInput 
-                style={styles.input} 
-                value={textName}
-                placeholder={'Enter your name here'}
-                placeholderTextColor='purple'
-                onChangeText={this.onChangeTextName}
-                onSubmitEditing={this.onSubmitEditing}
-            />
-            <TextInput 
-                style={styles.input} 
-                value={textEmail}
-                placeholder={'email'}
-                placeholderTextColor='purple'
-                onChangeText={this.onChangeTextEmail}
-                onSubmitEditing={this.onSubmitEditing}
-            />
-            <TextInput 
-                style={styles.input} 
-                value={textRideOrDrive}
-                placeholder={'driver, rider, or both?'}
-                placeholderTextColor='purple'
-                onChangeText={this.onChangeTextRideOrDrive}
-                onSubmitEditing={this.onSubmitEditing}
-            />
-            <Button
-                onPress={() => Actions.Profile({name})}
-                title='Lets ride!'
-                color="#841584"
-                accessibilityLabel='Tap here to join or sign up'
+            {
+                name ? 
+                <Text style={styles.subtext}> Let's ride together {name}!</Text>
+                :
+                <View style={styles.reset}>
+                    <Text style={styles.maintext}> Welcome to CarPool! </Text>
+                    <Text style={styles.subtext}>Please Login / Signup</Text>
+                </View>
+            }
+            <KeyboardAvoidingView
                 style={styles.reset}
-            />
-            <Text style={styles.subtext}> Welcome to CarPool, {name}!</Text>
+                behavior="padding"
+                >
+                <TextInput 
+                    style={styles.input} 
+                    value={textName}
+                    placeholder={'Enter your name here'}
+                    placeholderTextColor='purple'
+                    onChangeText={this.onChangeTextName}
+                    onSubmitEditing={this.onSubmitEditing}
+                />
+                <TextInput 
+                    style={styles.input} 
+                    value={textEmail}
+                    placeholder={'email'}
+                    placeholderTextColor='purple'
+                    onChangeText={this.onChangeTextEmail}
+                    onSubmitEditing={this.onSubmitEditing}
+                />
+                <TextInput 
+                    style={styles.input} 
+                    value={textRideOrDrive}
+                    placeholder={'driver, rider, or both?'}
+                    placeholderTextColor='purple'
+                    onChangeText={this.onChangeTextRideOrDrive}
+                    onSubmitEditing={this.onSubmitEditing}
+                />
+                <Button
+                    onPress={() => Actions.profile({textName})}
+                    title='Lets ride!'
+                    color="#841584"
+                    accessibilityLabel='Tap here to join or sign up'
+                    style={styles.reset}
+                />
+            </KeyboardAvoidingView>
         </View>
     );
   }
@@ -134,7 +146,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(255,255,255,0.4)',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   maintext: {
     fontFamily: 'Roboto',
@@ -156,6 +168,8 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   reset: {
+    alignItems: 'center',
+    justifyContent: 'center',
     margin: 5,
   },
 });
