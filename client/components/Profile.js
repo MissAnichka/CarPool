@@ -7,7 +7,7 @@ export default class Profile extends Component {
   render() {
     const remote = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk9W3iZPVZxPmv0a94vXVUFL2Tt09zq71iGCQqxTd3zd3Ph2m4';
     const resizeMode = 'center';
-    const {textName} = this.props
+    const {userName} = this.props
 
     return (
         <Image 
@@ -15,7 +15,7 @@ export default class Profile extends Component {
         source={{ uri: remote }}
         >
           <View style={styles.container}>
-            <Text style={styles.maintext}>Hey {textName}!</Text>
+            <Text style={styles.maintext}>Hey {userName}!</Text>
             <Text style={styles.subtext}>Your Trips</Text>
             <Text style={styles.subtext}>Stars</Text>
             <Text style={styles.subtext}>Reviews</Text>

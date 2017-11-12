@@ -27,6 +27,16 @@ export default class Footer extends Component {
         }
     }
 
+    logout = async() => {
+        try{
+            const {name} = this.state
+            await AsyncStorage.removeItem(USERNAME)
+            this.setState({name: ''})
+        } catch (error){
+            console.error(`Couldnt remove it ${error}`)
+        }
+    }
+
     render(){
         const {name} = this.state
         return(
@@ -34,7 +44,7 @@ export default class Footer extends Component {
                 {
                     !!name ? 
                     <View style={styles.footer}>
-                        <Text style={styles.footerText}>Logout</Text>
+                        <Text style={styles.footerText} onPress={this.logout}>Logout</Text>
                     </View>
                     :
                     <View style={styles.footer}>

@@ -10,7 +10,7 @@ export default class Login extends Component {
     constructor(props){
         super(props);
         this.state={
-            name: 'Guest',
+            userName: 'Guest',
             email: '',
             rideOrDrive: '',
             textName: '',
@@ -25,21 +25,21 @@ export default class Login extends Component {
 
   load = async() => {
       try{
-          const name = await AsyncStorage.getItem(USERNAME)
+          const userName = await AsyncStorage.getItem(USERNAME)
           const email = await AsyncStorage.getItem(USER_EMAIL)
           const rideOrDrive = await AsyncStorage.getItem(USER_RIDE_OR_DRIVE)
-          if(name && email && rideOrDrive){
-              this.setState({name, email, rideOrDrive})
+          if(userName && email && rideOrDrive){
+              this.setState({userName, email, rideOrDrive})
           }
       } catch(error){
           console.error(`Couldnt get it ${error}`)
       }
   }
 
-  saveName = async(name) => {
+  saveName = async(userName) => {
       try{
-          await AsyncStorage.setItem(USERNAME, name)
-          this.setState({name})
+          await AsyncStorage.setItem(USERNAME, userName)
+          this.setState({userName})
       } catch(error){
           console.error('nope did not save name')
       }
@@ -87,13 +87,13 @@ export default class Login extends Component {
   }
 
   render() {
-    const {name, email, rideOrDrive, textName, textEmail, textRideOrDrive} = this.state
+    const {userName, email, rideOrDrive, textName, textEmail, textRideOrDrive} = this.state
 
     return (
         <View style={styles.container}>
             {
-                name ? 
-                <Text style={styles.subtext}> Let's ride together {name}!</Text>
+                userName ? 
+                <Text style={styles.subtext}> Let's ride together {userName}!</Text>
                 :
                 <View style={styles.reset}>
                     <Text style={styles.maintext}> Welcome to CarPool! </Text>
@@ -129,7 +129,7 @@ export default class Login extends Component {
                     onSubmitEditing={this.onSubmitEditing}
                 />
                 <Button
-                    onPress={() => Actions.profile({textName})}
+                    onPress={() => Actions.profile({userName})}
                     title='Lets ride!'
                     color="#841584"
                     accessibilityLabel='Tap here to join or sign up'
