@@ -1,14 +1,50 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 
-module.exports = function Footer(){
-    return(
-        <View style={styles.footer}>
-            <Text style={styles.footerText} onPress={() => Actions.login()}>Login</Text>
-            <Text style={styles.footerText} onPress={() => Actions.login()}>Signup</Text>
-        </View>
-    )
+const USERNAME = 'USERNAME'
+
+export default class Footer extends Component {
+    constructor(props){
+      super(props);
+      this.state={
+        name: ''
+      }
+    }
+
+    componentDidMount(){
+       this.load()
+    }
+
+    load = async() => {
+       try{
+           const name = await AsyncStorage.getItem(USERNAME)
+           if(name){
+               this.setState({name})
+           }
+        } catch(error){
+           console.error(`Couldnt get it ${error}`)
+        }
+    }
+
+    render(){
+        const {name} = this.state
+        return(
+            <View>
+                {
+                    !!name ? 
+                    <View style={styles.footer}>
+                        <Text style={styles.footerText}>Logout</Text>
+                    </View>
+                    :
+                    <View style={styles.footer}>
+                        <Text style={styles.footerText} onPress={() => Actions.login()}>Login</Text>
+                        <Text style={styles.footerText} onPress={() => Actions.login()}>Signup</Text>
+                    </View>
+                }
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
