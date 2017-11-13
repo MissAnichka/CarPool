@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Button, Alert, AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Footer from './Footer';
+import AddTrip from './AddTrip';
 
 const USERNAME = 'USERNAME'
 const TRIP = 'TRIP'
@@ -24,6 +25,7 @@ export default class Trips extends Component {
 
         allTrips: ''
     }
+    this.saveTripDate = this.saveTripDate.bind(this)
   }
 
   componentWillMount(){
@@ -43,19 +45,10 @@ export default class Trips extends Component {
     }
   }
 
-  //trying to save a whole trip, not working...
-//   saveTrip = async(newTrip) => {
-//         try{
-//             await AsyncStorage.setItem(TRIP, newTrip)
-//             this.setState({allTrips: newTrip})
-//         } catch(error){
-//             console.error('nope did not save trip')
-//         }
-//   }
-
 saveTripDate = async(tripDate) => {
     try{
         tripDate = tripDate.toString()
+        console.log('saving tripdate', tripDate)
         await AsyncStorage.setItem(TRIP_DATE, tripDate)
         this.setState({tripDate})
     } catch(error){
@@ -83,36 +76,16 @@ saveTripDestination = async(tripDestination) => {
     }
 }
 
-//   onChangeNewTripDate = (newTripDate) => this.setState({newTripDate})
-//   onChangeNewTripOrigin = (newTripOrigin) => this.setState({newTripOrigin})
-//   onChangeNewTripDestination = (newTripDestination) => this.setState({newTripDestination})
-
-  newTripSubmit = () => {
-    let {newTripDate, newTripOrigin, newTripDestination} = this.state
-
-    if(!newTripDate || !newTripOrigin || !newTripDestination) return
-
-    if(newTripDate) {
-        this.saveTripDate(newTripDate)
-        this.setState({newTripDate: ''})
-    }
-    if(newTripOrigin) {
-        this.saveTripDate(newTripOrigin)
-        this.setState({newTripOrigin: ''})
-    }
-    if(newTripDestination) {
-        this.saveTripDate(newTripDestination)
-        this.setState({newTripDestination: ''})
-    }
-  }
-
+editTrip(){
+    console.log('I do nothing yet')
+}
   render() {
     const remote = 'https://cdn2.hercampus.com/rsz_pexels-photo-297755.jpg';
     const resizeMode = 'center';
     const {origin, destination, date} = this.props
     let {tripDate, tripOrigin, tripDestination} = this.state
-    // let {newTripDate, newTripOrigin, newTripDestination} = this.state
 
+    console.log('tripDate', tripDate)
     return (
         <Image 
         style={styles.image}
@@ -120,37 +93,10 @@ saveTripDestination = async(tripDestination) => {
         >
           <View style={styles.container}>
             <Text style={styles.maintext}>Trips</Text>
-            <Text style={styles.infotext}>Add a trip: </Text>
-            <TextInput 
-                style={styles.input} 
-                // value={newTripDate}
-                placeholder={'Enter date of trip'}
-                placeholderTextColor='purple'
-                onChange={(newTripDate) => this.setState({newTripDate})}
-                onSubmitEditing={this.newTripSubmit}
-            />
-            <TextInput 
-                style={styles.input} 
-                // value={newTripOrigin}
-                placeholder={'Enter trip origin'}
-                placeholderTextColor='purple'
-                onChange={(newTripOrigin) => this.setState({newTripOrigin})}
-                onSubmitEditing={this.newTripSubmit}
-            />
-            <TextInput 
-                style={styles.input} 
-                // value={newTripDestination}
-                placeholder={'Enter trip destination'}
-                placeholderTextColor='purple'
-                onChange={(newTripDestination) => this.setState({newTripDestination})}
-                onSubmitEditing={this.newTripSubmit}
-            />
-            <Button
-                onPress={this.newTripSubmit}
-                title='Add a trip'
-                color="#841584"
-                accessibilityLabel='Tap here to add a trip'
-                style={styles.reset}
+            <AddTrip 
+                saveTripDate={this.saveTripDate}
+                saveTripOrigin={this.saveTripOrigin}
+                saveTripDestination={this.saveTripDestination}                
             />
             {
                 (origin || destination || date) ? 
@@ -168,11 +114,11 @@ saveTripDestination = async(tripDestination) => {
             }
             <Text onPress={() => Actions.map()}>Tap for map</Text>
             {
-                tripDate && tripOrigin && tripDestination ?
+                tripDate ?
                 <View style={{alignItems: 'center'}}>
                     <Text style={styles.infotext}>Traveling on {tripDate} from {tripOrigin} to {tripDestination}</Text>
                     <Button
-                        onPress={this.newTripSubmit}
+                        onPress={this.editTrip}
                         title='Edit trip'
                         color="#841584"
                         accessibilityLabel='Tap here to edit your trip'

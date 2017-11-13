@@ -5,20 +5,25 @@ import MapView from 'react-native-maps';
 
 module.exports = class Map extends React.Component {
   render() {
-    const { region } = this.props;
-    console.log(region);
 
     return (
       <View style ={styles.container}>
         <MapView
           style={styles.map}
           region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+            latitude: 40.7045809,
+            longitude: -74.0111834,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}
         >
+        <MapView.Marker
+            coordinate={{latitude: 40.7045809,
+            longitude: -74.0111834}}
+            title={"car"}
+            description={"ride"}
+            image={{uri: 'https://stickeroid.com/uploads/pic/thumb/stickeroid_59944a62016c9.png'}}
+        />
         </MapView>
       </View>
     );
@@ -28,8 +33,8 @@ module.exports = class Map extends React.Component {
 const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
-      height: 400,
-      width: 400,
+      height: 740,
+      width: 420,
       justifyContent: 'flex-end',
       alignItems: 'center',
     },

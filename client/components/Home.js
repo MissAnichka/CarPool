@@ -21,6 +21,7 @@ export default class Home extends Component {
     const {origin} = this.state
     const {destination} = this.state
     const {date} = this.state
+    
     return (
         <Image 
         style={styles.image}
