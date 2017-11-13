@@ -12,7 +12,7 @@ export default class Footer extends Component {
       }
     }
 
-    componentDidMount(){
+    componentWillMount(){
        this.load()
     }
 
@@ -44,6 +44,7 @@ export default class Footer extends Component {
                 {
                     !!name ? 
                     <View style={styles.footer}>
+                        <Text style={styles.footerText} onPress={() => Actions.profile()}>Profile</Text>
                         <Text style={styles.footerText} onPress={this.logout}>Logout</Text>
                     </View>
                     :

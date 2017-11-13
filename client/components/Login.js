@@ -68,9 +68,8 @@ export default class Login extends Component {
   onChangeTextRideOrDrive = (textRideOrDrive) => this.setState({textRideOrDrive})
 
   onSubmitEditing = () => {
-      const {textName} = this.state
-      const {textEmail} = this.state
-      const {textRideOrDrive} = this.state
+      const {textName, textEmail, textRideOrDrive} = this.state
+
       if(!textName || !textEmail || !textRideOrDrive) return
       if(textName) {
           this.saveName(textName)
