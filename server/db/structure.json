@@ -1,0 +1,23 @@
+{
+  "users": {
+    "alovelace": {
+      "name": "Ada Lovelace",
+      "contacts": { "ghopper": true }
+    },
+    "ghopper": {  },
+    "eclarke": {  }
+  },
+  "messages": {
+      "one": {
+        "m1": {
+          "name": "eclarke",
+          "message": "The relay seems to be malfunctioning.",
+          "timestamp": 1459361875337
+        },
+        "m2": {  },
+        "m3": {  }
+      },
+      "two": {  },
+      "three": {  }
+  }
+}
