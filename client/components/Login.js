@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 const USERNAME = 'USERNAME'
@@ -99,12 +99,15 @@ export default class Login extends Component {
             if (type === 'success') {
                 // Get the user's name using Facebook's Graph API
                 const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-                Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+                const user = await response.json();
+                console.log("USER ===>", user);
+                Alert.alert('Logged in!', `Hi ${user.name}!`);
+                this.saveName(user.name)
             } else {
                 // type === 'cancel'
             }
         } catch ({ message }) {
-            alert(`Facebook Login Error: ${message}`);
+            Alert.alert(`Facebook Login Error: ${message}`);
         }
     }
 
