@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TextInput, Button, Alert, Linking } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TextInput, Button, Alert, Linking } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 
 
@@ -10,7 +10,7 @@ export default class Profile extends Component {
     const {userName} = this.props
 
     return (
-        <Image 
+        <ImageBackground 
         style={styles.image}
         source={{ uri: remote }}
         >
@@ -21,7 +21,7 @@ export default class Profile extends Component {
             <Text style={styles.subtext}>Reviews</Text>
             <Text style={styles.actionText} onPress={() => Actions.trips()}>Let's go for a ride! (Tap!)</Text>
           </View>
-        </Image>
+        </ImageBackground>
     );
   }
 }

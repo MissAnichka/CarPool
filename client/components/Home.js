@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TextInput, Button, Alert, Linking, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TextInput, Button, Alert, Linking, KeyboardAvoidingView } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 
 import Footer from './Footer';
@@ -23,7 +23,7 @@ export default class Home extends Component {
     const {date} = this.state
     
     return (
-        <Image 
+        <ImageBackground 
         style={styles.image}
         source={{ uri: remote }}
         >
@@ -64,7 +64,7 @@ export default class Home extends Component {
             <Text style={styles.actionText} onPress={() => Actions.trips()}>View All Trips</Text>
           </KeyboardAvoidingView>
           <Footer />
-        </Image>
+        </ImageBackground>
     );
   }
 }
