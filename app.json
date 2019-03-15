@@ -7,7 +7,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "splash": {
-      "image": "./images/beach.jpg",
+      "image": "./assets/images/beach-hammock.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
