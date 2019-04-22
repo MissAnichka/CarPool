@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StatusBar, StyleSheet, Text, View, Image, TextInput, Button, Alert, Linking } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import { Router, Scene } from 'react-native-router-flux';
 
@@ -8,7 +8,7 @@ import Footer from './client/components/Footer.js';
 import Login from './client/components/Login.js';
 import Profile from './client/components/Profile.js';
 import Trips from './client/components/Trips.js';
-import Map from './client/components/Map.js';
+import Maps from './client/components/Maps.js';
 
 
 export default class App extends Component {
@@ -33,7 +33,7 @@ export default class App extends Component {
             <Scene key="trips" component={Trips} />
             <Scene key="login" component={Login} />
             <Scene key="profile" component={Profile} />
-            <Scene key="map" component={Map} />
+            <Scene key="maps" component={Maps} />
           </Scene>
         </Router>
       );

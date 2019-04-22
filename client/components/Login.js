@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { firebaseLogin } from '../../firebase/firebase.js'
+// import { FB_APP_ID } from 'react-native-dotenv';
 
 const USERNAME = 'USERNAME'
 const USER_EMAIL = 'USER_EMAIL'
@@ -10,99 +12,93 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: 'Guest',
+            username: 'Guest',
             email: '',
             rideOrDrive: '',
             textName: '',
             textEmail: '',
             textRideOrDrive: ''
-        }
+        };
     }
 
     componentWillMount() {
-        this.load()
+        this.load();
     }
 
     load = async () => {
         try {
-            const userName = await AsyncStorage.getItem(USERNAME)
-            const email = await AsyncStorage.getItem(USER_EMAIL)
-            const rideOrDrive = await AsyncStorage.getItem(USER_RIDE_OR_DRIVE)
-            if (userName && email && rideOrDrive) {
-                this.setState({ userName, email, rideOrDrive })
+            const username = await AsyncStorage.getItem(USERNAME);
+            const email = await AsyncStorage.getItem(USER_EMAIL);
+            const rideOrDrive = await AsyncStorage.getItem(USER_RIDE_OR_DRIVE);
+            if (username && email && rideOrDrive) {
+                this.setState({ username, email, rideOrDrive });
             }
         } catch (error) {
-            console.error(`Couldnt get it ${error}`)
+            console.error(`Couldnt get it ${error}`);
         }
     }
 
-    saveName = async (userName) => {
+    saveName = async (username) => {
         try {
-            await AsyncStorage.setItem(USERNAME, userName)
-            this.setState({ userName })
+            await AsyncStorage.setItem(USERNAME, username);
+            this.setState({ username });
         } catch (error) {
-            console.error('nope did not save name')
+            console.error('nope did not save name');
         }
     }
 
     saveEmail = async (email) => {
         try {
-            await AsyncStorage.setItem(USER_EMAIL, email)
-            this.setState({ email })
+            await AsyncStorage.setItem(USER_EMAIL, email);
+            this.setState({ email });
         } catch (error) {
-            console.error('nope did not save email')
+            console.error('nope did not save email');
         }
     }
 
     saveRideOrDrive = async (rideOrDrive) => {
         try {
-            await AsyncStorage.setItem(USER_RIDE_OR_DRIVE, rideOrDrive)
-            this.setState({ rideOrDrive })
+            await AsyncStorage.setItem(USER_RIDE_OR_DRIVE, rideOrDrive);
+            this.setState({ rideOrDrive });
         } catch (error) {
-            console.error('nope did not save ride or drive')
+            console.error('nope did not save ride or drive');
         }
     }
 
-    onChangeTextName = (textName) => this.setState({ textName, name: textName })
-    onChangeTextEmail = (textEmail) => this.setState({ textEmail })
-    onChangeTextRideOrDrive = (textRideOrDrive) => this.setState({ textRideOrDrive })
+    onChangeTextName = (textName) => this.setState({ textName, name: textName });
+    onChangeTextEmail = (textEmail) => this.setState({ textEmail });
+    onChangeTextRideOrDrive = (textRideOrDrive) => this.setState({ textRideOrDrive });
 
     onSubmitEditing = () => {
-        const { textName, textEmail, textRideOrDrive } = this.state
+        const { textName, textEmail, textRideOrDrive } = this.state;
 
-        if (!textName || !textEmail || !textRideOrDrive) return
+        if (!textName || !textEmail || !textRideOrDrive) return;
         if (textName) {
-            this.saveName(textName)
-            this.setState({ textName: '' })
+            this.saveName(textName);
+            this.setState({ textName: '' });
         }
         if (textEmail) {
-            this.saveEmail(textEmail)
-            this.setState({ textEmail: '' })
+            this.saveEmail(textEmail);
+            this.setState({ textEmail: '' });
         }
         if (textRideOrDrive) {
-            this.saveRideOrDrive(textRideOrDrive)
-            this.setState({ textRideOrDrive: '' })
+            this.saveRideOrDrive(textRideOrDrive);
+            this.setState({ textRideOrDrive: '' });
         }
     }
 
     logIn = async () => {
         try {
-            const {
-                type,
-                token,
-                expires,
-                permissions,
-                declinedPermissions
-            } = await Expo.Facebook.logInWithReadPermissionsAsync('2235604156714606', {
-                permissions: ['public_profile'],
-            });
+            const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('2235604156714606', { permissions: ['public_profile'] });
             if (type === 'success') {
+                firebaseLogin(token);
+
                 // Get the user's name using Facebook's Graph API
                 const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
                 const user = await response.json();
                 console.log("USER ===>", user);
                 Alert.alert('Logged in!', `Hi ${user.name}!`);
-                this.saveName(user.name)
+                this.saveName(user.name);
             } else {
                 // type === 'cancel'
             }
@@ -112,13 +108,13 @@ export default class Login extends Component {
     }
 
     render() {
-        const { userName, email, rideOrDrive, textName, textEmail, textRideOrDrive } = this.state
+        const { username, email, rideOrDrive, textName, textEmail, textRideOrDrive } = this.state;
 
         return (
             <View style={styles.container}>
                 {
-                    userName ?
-                        <Text style={styles.subtext}> Let's ride together {userName}!</Text>
+                    username ?
+                        <Text style={styles.subtext}> Let's ride together {username}!</Text>
                         :
                         <View style={styles.reset}>
                             <Text style={styles.maintext}> Welcome to CarPool! </Text>
@@ -161,7 +157,7 @@ export default class Login extends Component {
                         onSubmitEditing={this.onSubmitEditing}
                     />
                     <Button
-                        onPress={() => Actions.profile({ userName })}
+                        onPress={() => Actions.profile({ username })}
                         title='Lets ride!'
                         color="#841584"
                         accessibilityLabel='Tap here to join or sign up'

@@ -3,13 +3,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import MapView from 'react-native-maps';
 
-module.exports = class Map extends React.Component {
+module.exports = class Maps extends React.Component {
   render() {
 
     return (
       <View style ={styles.container}>
         <MapView
-          style={styles.map}
+          style={styles.maps}
           region={{
             latitude: 40.7045809,
             longitude: -74.0111834,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-end',
       alignItems: 'center',
     },
-    map: {
+    maps: {
       ...StyleSheet.absoluteFillObject,
     },
   });
