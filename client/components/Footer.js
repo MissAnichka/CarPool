@@ -31,6 +31,7 @@ export default class Footer extends Component {
         try {
             await AsyncStorage.removeItem(USERNAME);
             this.setState({ username: 'Guest' });
+            Actions.home();
         } catch (error) {
             console.error(`Couldnt remove it ${error}`);
         }

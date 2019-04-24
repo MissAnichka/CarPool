@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ImageBackground, TextInput, Button, Alert, Linking } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
+import Footer from './Footer';
 
 export default class Profile extends Component {
   render() {
@@ -21,6 +22,7 @@ export default class Profile extends Component {
           <Text style={styles.subtext}>Reviews</Text>
           <Text style={styles.actionText} onPress={() => Actions.trips()}>Let's go for a ride! (Tap!)</Text>
         </View>
+        <Footer />
       </ImageBackground>
     );
   }

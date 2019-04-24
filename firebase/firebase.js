@@ -18,19 +18,22 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 const firebaseLogin = async (token) => {
-    // Build Firebase credential with the Facebook access token.
-    const credential = await firebase.auth.FacebookAuthProvider.credential(token);
-    console.log("CREDENTIAL =>", credential);
-    // Sign in with credential from the Facebook user.
-    firebase.auth().signInAndRetrieveDataWithCredential(credential)
-        .then((res) => console.log("firebase sign in & retrieve response =>", res))
-        .catch((error) => console.error("error signing into firebase =>", error));
+    try {
+        // Build Firebase credential with the Facebook access token.
+        const credential = await firebase.auth.FacebookAuthProvider.credential(token);
+        // Sign in with credential from the Facebook user
+        const firebaseFacebookAuth = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        const { name, email } = firebaseFacebookAuth.additionalUserInfo.profile;
+        return { name, email };
+    } catch (e) {
+        console.error("error signing in =>", e);
+    }
 }
 
-// Store users high scores in db
-const storeHighScore = (userId, score) => {
-    firebase.database().ref('users/' + userId).set({
-        highscore: score
+// Store users info in db
+const storeUserInfo = (username) => {
+    firebase.database().ref('users/' + username).set({
+        username: username
     });
 }
 

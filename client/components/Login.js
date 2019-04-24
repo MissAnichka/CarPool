@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { firebaseLogin } from '../../firebase/firebase.js'
-// import { FB_APP_ID } from 'react-native-dotenv';
+import { APP_ID } from 'react-native-dotenv';
 
 const USERNAME = 'USERNAME'
 const USER_EMAIL = 'USER_EMAIL'
@@ -89,16 +89,18 @@ export default class Login extends Component {
 
     logIn = async () => {
         try {
-            const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('2235604156714606', { permissions: ['public_profile'] });
+            const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(APP_ID, { permissions: ['public_profile', 'email'] });
             if (type === 'success') {
-                firebaseLogin(token);
-
-                // Get the user's name using Facebook's Graph API
-                const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-                const user = await response.json();
-                console.log("USER ===>", user);
-                Alert.alert('Logged in!', `Hi ${user.name}!`);
-                this.saveName(user.name);
+                const { name, email } = await firebaseLogin(token);
+                // TODO share state data better, maybe redux or just refactor
+                if (name) {
+                    Alert.alert('Logged in!', `Hi ${name}!`);
+                    this.saveName(name);
+                    this.saveEmail(email);
+                    Actions.profile({ username: name });
+                } else {
+                    throw new Error('login error occurred')
+                }
             } else {
                 // type === 'cancel'
             }
