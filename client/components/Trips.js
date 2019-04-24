@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TextInput, Button, Alert, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TextInput, Button, Alert, AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Footer from './Footer';
 import AddTrip from './AddTrip';
@@ -87,7 +87,7 @@ editTrip(){
 
     console.log('tripDate', tripDate)
     return (
-        <Image 
+        <ImageBackground 
         style={styles.image}
         source={{ uri: remote }}
         >
@@ -129,7 +129,7 @@ editTrip(){
             }
           </View>
           <Footer />
-        </Image>
+        </ImageBackground>
     );
   }
 }

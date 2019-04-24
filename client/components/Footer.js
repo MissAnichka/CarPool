@@ -1,57 +1,57 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
-import {Actions } from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 
-const USERNAME = 'USERNAME'
+const USERNAME = 'USERNAME';
 
 export default class Footer extends Component {
-    constructor(props){
-      super(props);
-      this.state={
-        name: ''
-      }
-    }
-
-    componentWillMount(){
-       this.load()
-    }
-
-    load = async() => {
-       try{
-           const name = await AsyncStorage.getItem(USERNAME)
-           if(name){
-               this.setState({name})
-           }
-        } catch(error){
-           console.error(`Couldnt get it ${error}`)
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: ''
         }
     }
 
-    logout = async() => {
-        try{
-            const {name} = this.state
-            await AsyncStorage.removeItem(USERNAME)
-            this.setState({name: ''})
-        } catch (error){
-            console.error(`Couldnt remove it ${error}`)
+    componentWillMount() {
+        this.load();
+    }
+
+    load = async () => {
+        try {
+            const username = await AsyncStorage.getItem(USERNAME)
+            if (username) {
+                this.setState({ username });
+            }
+        } catch (error) {
+            console.error(`Couldnt get it ${error}`);
         }
     }
 
-    render(){
-        const {name} = this.state
-        return(
+    logout = async () => {
+        try {
+            await AsyncStorage.removeItem(USERNAME);
+            this.setState({ username: 'Guest' });
+            Actions.home();
+        } catch (error) {
+            console.error(`Couldnt remove it ${error}`);
+        }
+    }
+
+    render() {
+        const { username } = this.state;
+        return (
             <View>
                 {
-                    !!name ? 
-                    <View style={styles.footer}>
-                        <Text style={styles.footerText} onPress={() => Actions.profile()}>Profile</Text>
-                        <Text style={styles.footerText} onPress={this.logout}>Logout</Text>
-                    </View>
-                    :
-                    <View style={styles.footer}>
-                        <Text style={styles.footerText} onPress={() => Actions.login()}>Login</Text>
-                        <Text style={styles.footerText} onPress={() => Actions.login()}>Signup</Text>
-                    </View>
+                    !!username ?
+                        <View style={styles.footer}>
+                            <Text style={styles.footerText} onPress={() => Actions.profile({ username })}>Profile</Text>
+                            <Text style={styles.footerText} onPress={this.logout}>Logout</Text>
+                        </View>
+                        :
+                        <View style={styles.footer}>
+                            <Text style={styles.footerText} onPress={() => Actions.login()}>Login</Text>
+                            <Text style={styles.footerText} onPress={() => Actions.login()}>Signup</Text>
+                        </View>
                 }
             </View>
         )
