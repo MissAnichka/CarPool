@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, Alert } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { firebaseLogin } from '../../firebase/firebase.js'
-import { APP_ID } from 'react-native-dotenv';
+import React, { Component } from "react";
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, Alert } from "react-native";
+import { Actions } from "react-native-router-flux";
+import { firebaseFBLogin, firebaseGoogleLogin } from "../../firebase/auth.js"
+import { APP_ID, G_ANDROID_CLIENT_ID } from "react-native-dotenv";
 
-const USERNAME = 'USERNAME'
-const USER_EMAIL = 'USER_EMAIL'
-const USER_RIDE_OR_DRIVE = 'USER_RIDE_OR_DRIVE'
+const USERNAME = "USERNAME"
+const USER_EMAIL = "USER_EMAIL"
+const USER_RIDE_OR_DRIVE = "USER_RIDE_OR_DRIVE"
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: 'Guest',
-            email: '',
-            rideOrDrive: '',
-            textName: '',
-            textEmail: '',
-            textRideOrDrive: ''
+            username: "Guest",
+            email: "",
+            rideOrDrive: "",
+            textName: "",
+            textEmail: "",
+            textRideOrDrive: ""
         };
     }
 
@@ -43,7 +43,7 @@ export default class Login extends Component {
             await AsyncStorage.setItem(USERNAME, username);
             this.setState({ username });
         } catch (error) {
-            console.error('nope did not save name');
+            console.error("nope did not save name");
         }
     }
 
@@ -52,7 +52,7 @@ export default class Login extends Component {
             await AsyncStorage.setItem(USER_EMAIL, email);
             this.setState({ email });
         } catch (error) {
-            console.error('nope did not save email');
+            console.error("nope did not save email");
         }
     }
 
@@ -61,7 +61,7 @@ export default class Login extends Component {
             await AsyncStorage.setItem(USER_RIDE_OR_DRIVE, rideOrDrive);
             this.setState({ rideOrDrive });
         } catch (error) {
-            console.error('nope did not save ride or drive');
+            console.error("nope did not save ride or drive");
         }
     }
 
@@ -75,38 +75,59 @@ export default class Login extends Component {
         if (!textName || !textEmail || !textRideOrDrive) return;
         if (textName) {
             this.saveName(textName);
-            this.setState({ textName: '' });
+            this.setState({ textName: "" });
         }
         if (textEmail) {
             this.saveEmail(textEmail);
-            this.setState({ textEmail: '' });
+            this.setState({ textEmail: "" });
         }
         if (textRideOrDrive) {
             this.saveRideOrDrive(textRideOrDrive);
-            this.setState({ textRideOrDrive: '' });
+            this.setState({ textRideOrDrive: "" });
         }
     }
 
-    logIn = async () => {
+    facebookLogin = async () => {
         try {
-            const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(APP_ID, { permissions: ['public_profile', 'email'] });
-            if (type === 'success') {
-                const { name, email } = await firebaseLogin(token);
+            const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(APP_ID, {
+                permissions: ["public_profile", "email"]
+            });
+
+            if (type === "success") {
+                const { name, email } = await firebaseFBLogin(token);
                 // TODO share state data better, maybe redux or just refactor
-                if (name) {
-                    Alert.alert('Logged in!', `Hi ${name}!`);
-                    this.saveName(name);
-                    this.saveEmail(email);
-                    Actions.profile({ username: name });
-                } else {
-                    throw new Error('login error occurred')
-                }
-            } else {
-                // type === 'cancel'
+                if (name) this.finishLoggingIn(name, email);
+                else throw new Error("login error occurred")
             }
+            // else type === "cancel", do nothing
         } catch ({ message }) {
             Alert.alert(`Facebook Login Error: ${message}`);
         }
+    }
+
+    googleLogin = async () => {
+        try {
+            const result = await Expo.Google.logInAsync({
+                clientId: G_ANDROID_CLIENT_ID,
+                scopes: ["profile", "email"]
+            });
+            console.log("google login result =", result);
+            if (result.type === "success") {
+                const { idToken, accessToken, user } = result;
+                firebaseGoogleLogin(idToken, accessToken);
+                if (user && user.email) this.finishLoggingIn(user.name, user.email);
+                else throw new Error("login error occurred")
+            }
+        } catch ({ message }) {
+            Alert.alert(`Google Login Error: ${message}`);
+        }
+    }
+
+    finishLoggingIn = (name, email) => {
+        Alert.alert("Logged in!", `Hi ${name}!`);
+        this.saveName(name);
+        this.saveEmail(email);
+        Actions.profile({ username: name });
     }
 
     render() {
@@ -128,41 +149,47 @@ export default class Login extends Component {
                     behavior="padding"
                 >
                     <Button
-                        onPress={() => this.logIn()}
-                        title='Login with Facebook'
+                        onPress={() => this.facebookLogin()}
+                        title="Login with Facebook"
                         color="#1550c6"
-                        accessibilityLabel='Tap here to log in with Facebook'
+                        accessibilityLabel="Tap here to log in with Facebook"
                         style={styles.reset}
+                    />
+                    <Button
+                        onPress={() => this.googleLogin()}
+                        class="g-signin2"
+                        title="Login with Google"
+                        accessibilityLabel="Tap here to log in with Google"
                     />
                     <TextInput
                         style={styles.input}
                         value={textName}
-                        placeholder={'Enter your name here'}
-                        placeholderTextColor='purple'
+                        placeholder={"Enter your name here"}
+                        placeholderTextColor="purple"
                         onChangeText={this.onChangeTextName}
                         onSubmitEditing={this.onSubmitEditing}
                     />
                     <TextInput
                         style={styles.input}
                         value={textEmail}
-                        placeholder={'email'}
-                        placeholderTextColor='purple'
+                        placeholder={"email"}
+                        placeholderTextColor="purple"
                         onChangeText={this.onChangeTextEmail}
                         onSubmitEditing={this.onSubmitEditing}
                     />
                     <TextInput
                         style={styles.input}
                         value={textRideOrDrive}
-                        placeholder={'driver, rider, or both?'}
-                        placeholderTextColor='purple'
+                        placeholder={"driver, rider, or both?"}
+                        placeholderTextColor="purple"
                         onChangeText={this.onChangeTextRideOrDrive}
                         onSubmitEditing={this.onSubmitEditing}
                     />
                     <Button
                         onPress={() => Actions.profile({ username })}
-                        title='Lets ride!'
+                        title="Lets ride!"
                         color="#841584"
-                        accessibilityLabel='Tap here to join or sign up'
+                        accessibilityLabel="Tap here to join or sign up"
                         style={styles.reset}
                     />
                 </KeyboardAvoidingView>
@@ -174,14 +201,14 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgba(255,255,255,0.4)',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: "rgba(255,255,255,0.4)",
+        alignItems: "center",
+        justifyContent: "center",
     },
     maintext: {
-        fontFamily: 'Roboto',
+        fontFamily: "Roboto",
         fontSize: 50,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         margin: 5,
     },
     subtext: {
@@ -191,15 +218,15 @@ const styles = StyleSheet.create({
     input: {
         height: 40,
         width: 200,
-        borderColor: 'gray',
+        borderColor: "gray",
         borderWidth: 1,
         borderRadius: 10,
         padding: 5,
         margin: 5,
     },
     reset: {
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         margin: 5,
     },
 });
