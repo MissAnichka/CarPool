@@ -32,4 +32,30 @@ const firebaseGoogleLogin = async (idToken, accessToken) => {
     }
 };
 
-module.exports = { firebaseFBLogin, firebaseGoogleLogin };
+/**
+ * Firebase New User Sign Up
+ * @param {*} email 
+ * @param {*} password 
+ */
+const firebaseSignUp = async (email, password) => {
+    try {
+        firebase.auth().createUserWithEmailAndPassword(email, password);
+    } catch (e) {
+        console.log("error in sign up =>", e);
+    }
+}
+
+/**
+ * Firebase Login
+ * @param {*} email 
+ * @param {*} password 
+ */
+const firebaseLogin = async (email, password) => {
+    try {
+        firebase.auth().signInWithEmailAndPassword(email, password);
+    } catch (e) {
+        console.log("error in sign up =>", e);
+    }
+}
+
+module.exports = { firebaseFBLogin, firebaseGoogleLogin, firebaseSignUp, firebaseLogin };

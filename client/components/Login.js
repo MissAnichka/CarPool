@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, Alert } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, Alert, Image, TouchableHighlight } from "react-native";
 import { Actions } from "react-native-router-flux";
-import { firebaseFBLogin, firebaseGoogleLogin } from "../../firebase/auth.js"
+import { firebaseFBLogin, firebaseGoogleLogin, firebaseSignUp, firebaseLogin } from "../../firebase/auth.js"
 import { APP_ID, G_ANDROID_CLIENT_ID } from "react-native-dotenv";
 
 const USERNAME = "USERNAME"
@@ -17,6 +17,7 @@ export default class Login extends Component {
             rideOrDrive: "",
             textName: "",
             textEmail: "",
+            textPassword: "",
             textRideOrDrive: ""
         };
     }
@@ -67,12 +68,13 @@ export default class Login extends Component {
 
     onChangeTextName = (textName) => this.setState({ textName, name: textName });
     onChangeTextEmail = (textEmail) => this.setState({ textEmail });
+    onChangeTextPassword = (textPassword) => this.setState({ textPassword });
     onChangeTextRideOrDrive = (textRideOrDrive) => this.setState({ textRideOrDrive });
 
     onSubmitEditing = () => {
-        const { textName, textEmail, textRideOrDrive } = this.state;
+        const { textName, textEmail, textPassword, textRideOrDrive } = this.state;
 
-        if (!textName || !textEmail || !textRideOrDrive) return;
+        if (!textName || !textEmail || !textPassword || !textRideOrDrive) return;
         if (textName) {
             this.saveName(textName);
             this.setState({ textName: "" });
@@ -80,6 +82,9 @@ export default class Login extends Component {
         if (textEmail) {
             this.saveEmail(textEmail);
             this.setState({ textEmail: "" });
+        }
+        if (textPassword) {
+            this.setState({ textPassword: "" });
         }
         if (textRideOrDrive) {
             this.saveRideOrDrive(textRideOrDrive);
@@ -123,6 +128,21 @@ export default class Login extends Component {
         }
     }
 
+    userLogin = async () => {
+        try {
+
+            console.log("google login result =", result);
+            if (result.type === "success") {
+                const { idToken, accessToken, user } = result;
+                firebaseGoogleLogin(idToken, accessToken);
+                if (user && user.email) this.finishLoggingIn(user.name, user.email);
+                else throw new Error("login error occurred")
+            }
+        } catch ({ message }) {
+            Alert.alert(`Google Login Error: ${message}`);
+        }
+    }
+
     finishLoggingIn = (name, email) => {
         Alert.alert("Logged in!", `Hi ${name}!`);
         this.saveName(name);
@@ -130,6 +150,9 @@ export default class Login extends Component {
         Actions.profile({ username: name });
     }
 
+    /**
+     * TODO add appropriate buttons for g & fb login
+     */
     render() {
         const { username, email, rideOrDrive, textName, textEmail, textRideOrDrive } = this.state;
 
@@ -155,12 +178,11 @@ export default class Login extends Component {
                         accessibilityLabel="Tap here to log in with Facebook"
                         style={styles.reset}
                     />
-                    <Button
-                        onPress={() => this.googleLogin()}
-                        class="g-signin2"
-                        title="Login with Google"
-                        accessibilityLabel="Tap here to log in with Google"
-                    />
+                    <TouchableHighlight onPress={() => this.googleLogin()}>
+                        <Image
+                            source={require('../../assets/google_signin_buttons/btn_google_signin_light_normal_web.png')}
+                        />
+                    </TouchableHighlight>
                     <TextInput
                         style={styles.input}
                         value={textName}
@@ -179,6 +201,13 @@ export default class Login extends Component {
                     />
                     <TextInput
                         style={styles.input}
+                        placeholder={"password"}
+                        placeholderTextColor="purple"
+                        onChangeText={this.onChangeTextPassword}
+                        onSubmitEditing={this.onSubmitEditing}
+                    />
+                    <TextInput
+                        style={styles.input}
                         value={textRideOrDrive}
                         placeholder={"driver, rider, or both?"}
                         placeholderTextColor="purple"
@@ -186,7 +215,7 @@ export default class Login extends Component {
                         onSubmitEditing={this.onSubmitEditing}
                     />
                     <Button
-                        onPress={() => Actions.profile({ username })}
+                        onPress={() => this.userLogin()}
                         title="Lets ride!"
                         color="#841584"
                         accessibilityLabel="Tap here to join or sign up"
@@ -228,5 +257,5 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         margin: 5,
-    },
+    }
 });
